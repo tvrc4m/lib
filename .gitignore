@@ -1,2 +1,6 @@
 
 .DS_Store
+cache/compile/*.php
+cache/html/*.html
+cache/session/*
+!cache/session/readme.md
