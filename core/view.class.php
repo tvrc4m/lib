@@ -87,11 +87,8 @@ class View{
 	*	子Action调用 
 	*/
 	private function children(){
-		$loadChild=array(
-			'header'=>array('common/header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js)),
-			'footer'=>'common/footer',
-		);
-		$children=array_merge($loadChild,$this->children);
+		
+		$children=$this->get_children();
 
 		$left=$right=0;
 		// print_r($children);

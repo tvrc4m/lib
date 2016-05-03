@@ -6,7 +6,6 @@ class Action extends View{
 
 	protected $error=array();
 	protected $settings=array();
-	// protected $children=array('top'=>'common/top','bottom'=>'common/bottom','left'=>'common/left','right'=>'common/right');
 
 	public function __construct(){
 
@@ -80,6 +79,17 @@ class Action extends View{
 
 		return !!(S('LOGGED') && S($sk));
 	}
+	/**
+	 * 获取基础class类的组合子类
+	 * @return array 子类的相对路径+传递的参数数组
+	 */
+	protected function get_children()
+	{
+		return array(
+			'header'=>array('common/header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js)),
+			'footer'=>'common/footer',
+		);
+	}
 
 	/**
 	*	调用Action静态方法
@@ -97,11 +107,19 @@ class Action extends View{
 
 		empty($action) && $action='index';
 
-		$classname=ucfirst($cls).'Action';
-
-		$file=ACTION.$parent.'/'.$cls.'.action.php';
-		// echo $file.PHP_EOL;
-		if(!is_file($file)) exit('action file not found');
+		if(empty($cls)){
+			
+			$classname=ucfirst($parent).'Action';
+			$file=ACTION.$parent.'.action.php';
+		}else{
+			$classname=ucfirst($cls).'Action';
+			$file=ACTION.$parent.'/'.$cls.'.action.php';
+		}
+		
+		if(!is_file($file)){
+			echo $file;
+			exit('action file not found');
+		} 
 		
 		include_once($file);
 
@@ -119,7 +137,7 @@ class FAction extends Action{
 		parent::__construct();
 	}
 }
-
+// 后台需要登录的基础action类
 class AdminAction extends Action{
 
 	public function __construct(){
@@ -129,7 +147,7 @@ class AdminAction extends Action{
 		}
 	}
 }
-
+// 前台需要登录的基础action类
 class VAction extends Action{
 
 	protected $children=array('column_left'=>'common/left','content_top'=>'common/top','content_bottom'=>'common/bottom','column_right'=>'common/right');
@@ -139,6 +157,24 @@ class VAction extends Action{
 		if(!$this->check('VENDOR')){
 			redirect(vendor_url('login'));
 		}
+	}
+}
+
+/**
+* 只面向action只有一级目录结构的项目基础action类
+*/
+class SingleAction extends Action
+{
+	
+	function __construct(){
+		parent::__construct();
+	}
+
+	protected function get_children(){
+		return array(
+			'header'=>array('header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js)),
+			'footer'=>'footer',
+		);
 	}
 }
 
