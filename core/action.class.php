@@ -20,7 +20,7 @@ class Action extends View{
 		$this->view->registerPlugin('block','top','smarty_block_top',false);
 		$this->view->registerPlugin('block','toplr','smarty_block_toplr',false);
 		// 加载setting配置
-		$this->setting();
+		// $this->setting();
 		$this->debug();
 	}
 
