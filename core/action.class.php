@@ -6,6 +6,9 @@ class Action extends View{
 
 	protected $error=array();
 	protected $settings=array();
+	protected $post=array();
+	protected $get=array();
+	protected $request=array();
 
 	public function __construct(){
 
@@ -21,7 +24,10 @@ class Action extends View{
 		$this->view->registerPlugin('block','toplr','smarty_block_toplr',false);
 		// 加载setting配置
 		// $this->setting();
-		$this->debug();
+		// $this->debug();
+		$this->post=&$_POST;
+		$this->get=&$_GET;
+		$this->request=&$_REQUEST;
 	}
 
 	protected function setting(){
@@ -145,6 +151,11 @@ class AdminAction extends Action{
 		if(!$this->check('ADMIN')){
 			redirect(admin_url('login'));
 		}
+	}
+
+	public function display($tpl,$cache_id=null,$compile_id=null,$suffix='.tpl'){
+		$this->assign(array('pTitle'=>$this->title));
+		parent::display($tpl,$cache_id,$compile_id,$suffix);
 	}
 }
 // 前台需要登录的基础action类

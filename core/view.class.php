@@ -74,14 +74,14 @@ class View{
 	}
 
 	private function lang($lang=''){
+		global $langs;
 		if(!empty($lang)){
-			global $langs;
 			if(is_string($lang)) 
 				L::load($lang);
 			else if(is_array($lang)) 
 				foreach ($lang as $l)  $this->lang($l);
-			$this->assign($langs);
 		}
+		$this->assign($langs);
 	}
 	/**
 	*	子Action调用 

@@ -28,7 +28,7 @@ class Lang {
 
 		list($parent,$cls)=explode('/', $path);
 		// echo $file.PHP_EOL;
-		if(!is_file($file)) exit('language file not found');
+		if(!is_file($file)) return;
 		
 		global $langs;
 		
