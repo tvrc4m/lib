@@ -24,6 +24,12 @@ class Api {
     protected $timestamp;
 
     /**
+     * 请求的方法名
+     * @var string
+     */
+    protected $action;
+
+    /**
      * 时间有效期（单位为秒）
      * @var int
      */
@@ -61,7 +67,7 @@ class Api {
 
     /**
      * 响应成功后的数据 
-     * @var [type]
+     * @var array
      */
     protected $response_data;
 
@@ -88,6 +94,15 @@ class Api {
         $this->secret=$this->app['secret'];
         $this->timestamp= $_POST['timestamp'];
         $this->signature= $_POST['signature'];
+        $this->action= $_POST['action'];
+
+        if (method_exists($this,$this->action)) {
+            
+            call_user_func(array($this,$this->action));
+        }else{
+            // 请求的方法不存在
+            $this->response_code=1101;
+        }
     }
 
     private function response(){
@@ -167,8 +182,9 @@ class Api {
         $data['signature']=$this->secret;
         $data['timestamp']=$this->timestamp;
         $data['appid']=$this->appid;
+        $data['action']=$this->action;
 
-        sort($data);
+        ksort($data);
 
         $str=http_build_query($data);
 

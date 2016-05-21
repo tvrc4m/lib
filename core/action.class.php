@@ -9,6 +9,8 @@ class Action extends View{
 	protected $post=array();
 	protected $get=array();
 	protected $request=array();
+	protected $header=array();
+	protected $footer=array();
 
 	public function __construct(){
 
@@ -92,8 +94,8 @@ class Action extends View{
 	protected function get_children()
 	{
 		return array(
-			'header'=>array('common/header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js)),
-			'footer'=>'common/footer',
+			'header'=>array('common/header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js,'header'=>$this->header)),
+			'footer'=>array('common/footer',array('footer'=>$this->footer)),
 		);
 	}
 
@@ -185,6 +187,26 @@ class SingleAction extends Action
 		return array(
 			'header'=>array('header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js)),
 			'footer'=>'footer',
+		);
+	}
+}
+
+/**
+* App页面
+*/
+class AppAction extends Action
+{
+	
+	function __construct(){
+		parent::__construct();
+		$this->header['show_navbar']=1;
+		$this->footer['hide_tabbar']=1;
+	}
+
+	protected function get_children(){
+		return array(
+			'header'=>array('common/header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js,'header'=>array_merge(array('title'=>$this->title),$this->header))),
+			'footer'=>array('common/footer',array('footer'=>$this->footer)),
 		);
 	}
 }
