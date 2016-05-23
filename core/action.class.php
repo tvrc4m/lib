@@ -196,16 +196,46 @@ class SingleAction extends Action
 */
 class AppAction extends Action
 {
-	
+
+	protected $history_back=-1;
+
 	function __construct(){
 		parent::__construct();
 		$this->header['show_navbar']=1;
 		$this->footer['hide_tabbar']=1;
+		$this->browser_history();
+	}
+
+	/**
+	 * 记录每次post请求，后退的步数递减
+	 * 默认后退步数为-1
+	 * !import 表单提交中需要传递history_back回来
+	 * !TODO 如何更好的在表单中写入history_back
+	 * @return
+	 */
+	protected function browser_history(){
+		if($_SERVER['REQUEST_METHOD']=='POST'){
+			$this->history_back=(int)$this->post['history_back'];
+			$this->history_back--;
+		}
+		$this->assign(array('history_back'=>$this->history_back));
 	}
 
 	protected function get_children(){
 		return array(
-			'header'=>array('common/header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js,'header'=>array_merge(array('title'=>$this->title),$this->header))),
+			'header'=>array('common/header',array(
+				'pTitle'=>$this->title,
+				'pKeyword'=>$this->keyword,
+				'pDesc'=>$this->description,
+				'pCss'=>$this->css,
+				'pJs'=>$this->js,
+				'header'=>array_merge(array(
+					'title'=>$this->title,
+					'left_navbar'=>array(
+						'href'=>sprintf("javascript:goBack(%d);",(int)$this->history_back),
+						'icon'=>'fa-chevron-left'
+					)),
+				$this->header))),
 			'footer'=>array('common/footer',array('footer'=>$this->footer)),
 		);
 	}

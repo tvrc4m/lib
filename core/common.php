@@ -17,6 +17,30 @@ function S($key,$value=''){
 	else $_SESSION[$key]=$value;
 	// print_r($_SESSION);exit;
 }
+
+function N($link=''){
+	$key='navigation';
+	if (is_null($link))  unset($_SESSION[$key]);
+	elseif($link===''){
+		$navigation_bar=unserialize($_SESSION[$key]);
+		// print_r($navigation_bar);exit;
+		if (empty($navigation_bar))
+			return '/';
+		else{
+			$current=array_pop($navigation_bar);
+			$_SESSION[$key]=serialize($navigation_bar);
+			return $current;
+		}
+	}else{
+		$navigation_bar=unserialize($_SESSION[$key]);
+		empty($navigation_bar) && $navigation_bar=array();
+		if(end($navigation_bar)==$link) return;
+		array_push($navigation_bar, $link);
+		// print_r($navigation_bar);exit;
+		$_SESSION[$key]=serialize($navigation_bar);
+	}
+}
+
 /**
 *	调用插件	
 **/
