@@ -88,13 +88,14 @@ abstract class Model{
 */
 class MysqlModel extends Model{
 
-	protected $prefix='kt_';
+	protected $prefix='tt_';
 	
 	protected $table='';
 
 	public function __construct(){
 		parent::__construct();
 		$this->init();
+		$this->prefix=DB_PREFIX;
 	}
 	
 	protected function init(){
@@ -152,7 +153,7 @@ class MysqlModel extends Model{
 	protected function insert($data){
 		if(empty($data)) return 0;
 		$values=$this->set($data);
-		$this->query("INSERT INTO ".DB_PREFIX.$this->table." {$values}");
+		$this->query("INSERT INTO ".$this->prefix.$this->table." {$values}");
 		return $this->lastID();
 	}
 	/**
@@ -163,7 +164,7 @@ class MysqlModel extends Model{
 		$values=$this->set($data);
 		if(empty($values)) return;
 		$where=$this->where($where);
-		return $this->query("UPDATE ".DB_PREFIX.$this->table." {$values} {$where}");
+		return $this->query("UPDATE ".$this->prefix.$this->table." {$values} {$where}");
 	}
 
 	protected function select($params=array()){
@@ -172,20 +173,20 @@ class MysqlModel extends Model{
 		$sort=$this->sort($params['sort']);
 		$group=$this->group($params['group']);
 		$limit=$this->limit($params['limit']);
-		// echo "SELECT {$field} FROM ".DB_PREFIX.$this->table." {$where} {$group} {$sort} {$limit}";
-		return $this->find("SELECT {$field} FROM ".DB_PREFIX.$this->table." {$where} {$group} {$sort} {$limit}");
+		// echo "SELECT {$field} FROM ".$this->prefix.$this->table." {$where} {$group} {$sort} {$limit}";
+		return $this->find("SELECT {$field} FROM ".$this->prefix.$this->table." {$where} {$group} {$sort} {$limit}");
 	}
 
 	protected function delete($where){
 		$where=$this->where($where);
-		return $this->query("DELETE FROM ".DB_PREFIX.$this->table." {$where}");	
+		return $this->query("DELETE FROM ".$this->prefix.$this->table." {$where}");	
 	}
 
 	protected function replace($data,$where){
 		if(empty($data)) return 0;
 		$values=$this->set($data);
 		$where=$this->where($where);
-		return $this->query("REPLACE INTO ".DB_PREFIX.$this->table." {$values} {$where}");
+		return $this->query("REPLACE INTO ".$this->prefix.$this->table." {$values} {$where}");
 	}
 
 	protected function one($params=array()){
