@@ -197,6 +197,7 @@ class SingleAction extends Action
 class AppAction extends Action
 {
 
+	protected $browser;
 	protected $history_back=-1;
 
 	function __construct(){
@@ -204,6 +205,7 @@ class AppAction extends Action
 		$this->header['show_navbar']=1;
 		$this->footer['hide_tabbar']=1;
 		$this->browser_history();
+		$this->browser_detected();
 	}
 
 	/**
@@ -219,6 +221,11 @@ class AppAction extends Action
 			$this->history_back--;
 		}
 		$this->assign(array('history_back'=>$this->history_back));
+	}
+
+	protected function browser_detected(){
+		include_once CORE."browser.class.php";
+		$this->browser=new Browser();
 	}
 
 	protected function get_children(){
