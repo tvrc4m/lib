@@ -135,6 +135,39 @@ class Action extends View{
 
 		return call_user_func_array(array($cls,$action),array($args));
 	}
+
+	public function __get($medium){
+		
+		static $medium_instances=array();
+
+		list($dir,$name)=explode("_",strtolower($medium),2);
+
+		$name=str_replace('_', '.', $name);
+
+		if(isset($medium_instances[$medium])) return $medium_instances[$medium];
+
+		$file=MEDIUM.$dir.'/'.$name.'.php';
+
+		if (!is_file($file)) {
+			
+			return $this->$medium;
+		}
+
+		include_once $file;
+
+		if(strpos($name,'.')===FALSE){
+
+			$cls=ucfirst($dir).ucfirst($name);
+		}else{
+
+			$split=explode('.',$name);
+			$cls=ucfirst($dir).ucfirst($split[0]).ucfirst($split[1]);
+		}
+
+		$instance=new $cls();
+
+		return $medium_instances[$medium]=$instance;
+	}
 }
 
 class FAction extends Action{
@@ -197,8 +230,22 @@ class SingleAction extends Action
 class AppAction extends Action
 {
 
+	/**
+	 * 用来判断浏览器的实例对象
+	 * @var object
+	 */
 	protected $browser;
+
+	/**
+	 * 记录回退按钮需要回退的步数,默认为-1
+	 * @var integer
+	 */
 	protected $history_back=-1;
+	/**
+	 * 标识用户是否已登录
+	 * @var boolean
+	 */
+	protected $is_login;
 
 	function __construct(){
 		parent::__construct();
@@ -206,6 +253,7 @@ class AppAction extends Action
 		$this->footer['hide_tabbar']=1;
 		$this->browser_history();
 		$this->browser_detected();
+		$this->is_login=(S(SESSION_USER_ID) && S(SESSION_USER));
 	}
 
 	/**
@@ -241,10 +289,54 @@ class AppAction extends Action
 					'left_navbar'=>array(
 						'href'=>sprintf("javascript:goBack(%d);",(int)$this->history_back),
 						'icon'=>'fa-chevron-left'
-					)),
+					),
+					'is_weixin'=>$this->browser->weixin,
+					'is_ios'=>$this->browser->ios,
+					'is_andriod'=>$this->browser->andriod,
+					),
 				$this->header))),
 			'footer'=>array('common/footer',array('footer'=>$this->footer)),
 		);
+	}
+}
+
+class AppAuthAction extends AppAction{
+
+	/**
+	 * 用户对象实例
+	 * @var object
+	 */	
+	protected $user;
+
+	/**
+	 * 当前登录用户id
+	 * @var int
+	 */
+	protected $user_id;
+
+	/**
+	 * 当前用户切换的wedding_id
+	 * @var int
+	 */
+	protected $wedding_id;
+
+
+	public function __construct(){
+
+		parent::__construct();
+
+		if(!$this->is_login){
+
+			$back= $_SERVER['HTTPS']?'https://':'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+
+			redirect('/login?back='.urlencode($back));
+		}
+
+		$this->user_id=S(SESSION_USER_ID);
+
+		$this->user=S(SESSION_USER);
+
+		$this->wedding_id=$this->user['wedding_id'];
 	}
 }
 

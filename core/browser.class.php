@@ -22,5 +22,7 @@ class Browser {
             
             stripos($this->agent,$platform) !== false && $this->$field=true;
         }
+
+        $this->ios=$this->iphone || $this->ipad || $this->ipod;
     }
 }

@@ -39,7 +39,36 @@ abstract class Medium{
 	*	Medium子类的标准入口方法
 	*	@param data 参数数组 
 	*/
-	abstract public function run($action,$data);
+	public function run($action,$data){
+
+		return call_user_func_array(array($this,$action),$data);
+	}
+
+	public function __get($model){
+		
+		static $model_instances=array();
+
+		list($dir,$name)=explode("_",strtolower($model),2);
+
+		$name=str_replace('_', '.', $name);
+
+		if(isset($model_instances[$model])) return $model_instances[$model];
+
+		include_once MODEL.$dir.'/'.$name.'.model.php';
+
+		if(strpos($name,'.')===FALSE){
+
+			$cls=ucfirst($dir).ucfirst($name).'Model';
+		}else{
+
+			$split=explode('.',$name);
+			$cls=ucfirst($dir).ucfirst($split[0]).ucfirst($split[1]).'Model';
+		}
+
+		$instance=new $cls();
+
+		return $model_instances[$model]=$instance;
+	}
 }
 
 /**
