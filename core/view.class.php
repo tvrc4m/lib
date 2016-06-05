@@ -118,13 +118,13 @@ class View{
 	/**
 	**	向页面赋值
 	*/
-	public function assign($array){
+	protected function assign($array){
 		foreach($array as $k=>$v){
 			$this->view->assign($k,$v);
 		}
 	}
 
-	public function displayStyle($left=0,$right=0){
+	protected function displayStyle($left=0,$right=0){
 		
 		if ($left && $right) {
 		    $main_class = 'col-md-6';
@@ -141,7 +141,7 @@ class View{
 	/**
 	*	显示页面
 	*/
-	public function display($tpl,$cache_id=null,$compile_id=null,$suffix='.tpl'){
+	protected function display($tpl,$cache_id=null,$compile_id=null,$suffix='.tpl'){
 		if(PAJX_ENABLE && ispjax()){
 			$this->children_v2();
 			exit($this->view->fetch($tpl.$suffix,$cache_id,$compile_id));
@@ -155,8 +155,24 @@ class View{
 	*	获取页面内容
 	*/
 
-	public function fetch($tpl,$cache_id=null,$compile_id=null,$suffix='.tpl'){
+	protected function fetch($tpl,$cache_id=null,$compile_id=null,$suffix='.tpl'){
 		$this->children_v2();
 		return $this->view->fetch($tpl.$suffix,$cache_id,$compile_id);
+	}
+
+	/**
+	 * 获取子页面内容
+	 * @param  string $tpl        模板相对路径
+	 * @param  string $cache_id   缓存id
+	 * @param  string $compile_id 编译文件id
+	 * @param  string $suffix     文件后缀名
+	 * @return string             文件内容
+	 */
+	protected function fetch_v2($tpl,$cache_id=null,$compile_id=null,$suffix='.tpl'){
+		return $this->view->fetch($tpl.$suffix,$cache_id,$compile_id);
+	}
+
+	protected function tpl_exists($tpl,$suffix='.tpl'){
+		return file_exists(VIEW.$tpl.$suffix);
 	}
 }

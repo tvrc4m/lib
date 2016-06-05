@@ -79,30 +79,30 @@ class Api {
 
     public function __construct($app){
 
-        parent::__construct();
         $this->ip = getip();
-        if (!$this->checkIp($user_ip)) {
-            // 如果不允许此ip访问
-            $this->response();
-        }
-        $this->app=$app;
-        if (!$this->checkApp()) {
-            // 如果应用不可用
-            $this->response();
-        }
-        $this->appid =$_POST['appid'];
-        $this->secret=$this->app['secret'];
-        $this->timestamp= $_POST['timestamp'];
-        $this->signature= $_POST['signature'];
-        $this->action= $_POST['action'];
-
-        if (method_exists($this,$this->action)) {
+        
+        if ($this->checkIp($user_ip)) {
             
-            call_user_func(array($this,$this->action));
-        }else{
-            // 请求的方法不存在
-            $this->response_code=1101;
+            $this->app=$app;
+            if ($this->checkApp()) {
+                
+                $this->appid =$_POST['appid'];
+                $this->secret=$this->app['secret'];
+                $this->timestamp= $_POST['timestamp'];
+                $this->signature= $_POST['signature'];
+                $this->action= $_POST['action'];
+
+                if (method_exists($this,$this->action)) {
+                    
+                    call_user_func(array($this,$this->action));
+                }else{
+                    // 请求的方法不存在
+                    $this->response_code=1101;
+                }
+            }
         }
+        
+        $this->response();
     }
 
     private function response(){

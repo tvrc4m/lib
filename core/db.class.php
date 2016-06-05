@@ -40,6 +40,12 @@ abstract class DB{
 
 class DBMysql extends DB{
 	
+	/**
+	 * 执行sql语句
+	 * @var string
+	 */
+	protected $sql;
+
 	/*
 	*连接
 	*/
@@ -102,6 +108,44 @@ class DBMysql extends DB{
 		mysqli_free_result($result);
 	}
 
+	/**
+	 * 开启事务
+	 * @return boolean true 开启成功 false 失败
+	 */
+	public function start_trans(){
+		if(!mysqli_begin_transaction($this->_link)){
+			throw new Exception(sprintf("启动事务失败: %s",mysqli_error($this->_link)), 10003);
+		}
+		return true;
+	}
+
+	/**
+	 * 提交事务
+	 * @return boolean true 提交成功
+	 */
+	public function commit(){
+		if(!mysqli_commit($this->_link)){
+			throw new Exception("提交事务失败", 10004);
+		}
+		return true;
+	}
+
+	/**
+	 * 回滚事务
+	 * @return boolean true 回滚成功
+	 */
+	public function rollback(){
+		if(!mysqli_rollback($this->_link)){
+			throw new Exception("回滚事务失败", 10005);
+		}
+		return true;
+	}
+
+	/**
+	 * 过滤特殊字符
+	 * @param  string $value 
+	 * @return string
+	 */
 	public function escape($value){
 		return mysqli_escape_string($this->_link,$value);
 	}
@@ -118,9 +162,7 @@ class DBMysql extends DB{
 		}
 		$query=mysqli_query($this->_link,$sql);
 		if(!$query){
-            echo $sql.PHP_EOL;
-			echo mysqli_error($this->_link).PHP_EOL;
-			exit('数据执行有错');
+			throw new Exception(var_export(array('sql'=>$sql,'error'=>mysqli_error($this->_link))), 10001);
 		}
 		return $query;
 	}

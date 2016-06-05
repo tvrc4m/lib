@@ -150,7 +150,7 @@ class MysqlModel extends Model{
 	/*
 	*	插入新数据
 	*/
-	protected function insert($data){
+	public function insert($data){
 		if(empty($data)) return 0;
 		$values=$this->set($data);
 		$this->query("INSERT INTO ".$this->prefix.$this->table." {$values}");
@@ -159,7 +159,7 @@ class MysqlModel extends Model{
 	/**
 	*	适合where是并集的情况下
 	*/
-	protected function update($data,$where){
+	public function update($data,$where){
 		if(empty($data)) return 0;
 		$values=$this->set($data);
 		if(empty($values)) return;
@@ -167,7 +167,7 @@ class MysqlModel extends Model{
 		return $this->query("UPDATE ".$this->prefix.$this->table." {$values} {$where}");
 	}
 
-	protected function select($params=array()){
+	public function select($params=array()){
 		$field=$this->field($params['field']);
 		$where=$this->where($params['where']);
 		$sort=$this->sort($params['sort']);
@@ -177,19 +177,19 @@ class MysqlModel extends Model{
 		return $this->find("SELECT {$field} FROM ".$this->prefix.$this->table." {$where} {$group} {$sort} {$limit}");
 	}
 
-	protected function delete($where){
+	public function delete($where){
 		$where=$this->where($where);
 		return $this->query("DELETE FROM ".$this->prefix.$this->table." {$where}");	
 	}
 
-	protected function replace($data,$where){
+	public function replace($data,$where){
 		if(empty($data)) return 0;
 		$values=$this->set($data);
 		$where=$this->where($where);
 		return $this->query("REPLACE INTO ".$this->prefix.$this->table." {$values} {$where}");
 	}
 
-	protected function one($params=array()){
+	public function one($params=array()){
 		$result=$this->select(array('where'=>$params));
 		return $result[0];
 	}
@@ -213,6 +213,21 @@ class MysqlModel extends Model{
 	public function call($proc,$params){
 
 		return $this->_db->call($proc,$params);
+	}
+
+	public function start_trans(){
+
+		return $this->_db->start_trans();
+	}
+
+	public function commit(){
+
+		return $this->_db->commit();
+	}
+
+	public function rollback(){
+
+		return $this->_db->rollback();
 	}
 
 	public function escape($value){

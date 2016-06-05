@@ -175,3 +175,20 @@ function isLogged(){
 	return !!S('LOGGED');
 }
 
+function update_user_session($user){
+
+	$uid=$user['id'];
+
+	S(SESSION_USER_ID,$uid);
+
+	S(SESSION_USER,$user);
+
+	$ip=getip();
+
+	$time=time();
+
+	$logged="{$_SERVER['HTTP_HOST']};{$ip};{$uid};{$time}";
+	
+	C('LOGGED',encrypt($logged));
+}
+
