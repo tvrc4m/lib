@@ -241,6 +241,21 @@ class Auth  extends Base{
 	}
 
 	/**
+	 * 获取微信服务器IP地址列表
+	 * @return array('127.0.0.1','127.0.0.1')
+	 */
+	public function getServerIp(){
+
+		$access_token=$this->get_access_token();
+
+		if(!$access_token) return false;
+		
+		$result = $this->http_get(self::API_URL_PREFIX.'/getcallbackip?access_token='.$this->access_token);
+		
+		return $result['ip_list'];
+	}
+
+	/**
 	 * 设置缓存，按需重载
 	 * @param mixed $value
 	 * @param int $expired

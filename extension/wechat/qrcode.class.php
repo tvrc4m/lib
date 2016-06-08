@@ -42,17 +42,11 @@ class Qrcode  extends Auth{
 				return false;
 		}
 
-		$data = array(
-			'action_name'    => $action_name,
-			'expire_seconds' => $expire,
-			'action_info'    => $action_info
-		);
+		$data = array('action_name'=>$action_name,'expire_seconds'=>$expire,'action_info'=>$action_info);
 
 		if($type)  unset($data['expire_seconds']);
 
-		$result = $this->http_post(self::API_URL_PREFIX.'/qrcode/create?access_token='.$access_token,$data);
-		
-		return $result;
+		return $this->http_post(self::API_URL_PREFIX.'/qrcode/create?access_token='.$access_token,$data);
 	}
 
 	/**
@@ -76,10 +70,7 @@ class Qrcode  extends Auth{
 
 	    if(empty($access_token)) return false;
 
-	    $data = array(
-            'action'=>'long2short',
-            'long_url'=>$long_url
-	    );
+	    $data = array('action'=>'long2short','long_url'=>$long_url);
 
 	    $result = $this->http_post(self::API_URL_PREFIX.'/shorturl?access_token='.$access_token,$data);
 

@@ -20,9 +20,7 @@ class CustomerService extends Auth{
 	 */
 	public function get_custom_service_message($data){
 		
-		$result = $this->http_post(self::API_URL_PREFIX.'/customservice/getrecord?access_token='.$this->access_token,$data);
-		
-		return $result;
+		return $this->http_post(self::API_URL_PREFIX.'/customservice/getrecord?access_token='.$this->access_token,$data);
 	}
 
 	/**
@@ -104,10 +102,7 @@ class CustomerService extends Auth{
 	 */
 	public function create_session($openid,$kf_account,$text=''){
 
-	    $data=array(
-	    	"openid" =>$openid,
-	        "kf_account" => $kf_account
-	    );
+	    $data=array("openid" =>$openid,"kf_account" => $kf_account);
 
 	    if ($text) $data["text"] = $text;
 	    	
@@ -130,10 +125,7 @@ class CustomerService extends Auth{
 	 */
 	public function close_session($openid,$kf_account,$text=''){
 
-	    $data=array(
-	    	"openid" =>$openid,
-	        "kf_account" => $kf_account
-	    );
+	    $data=array("openid" =>$openid,"kf_account" => $kf_account);
 
 	    if ($text) $data["text"] = $text;
 
@@ -226,11 +218,7 @@ class CustomerService extends Auth{
 	 */
 	public function add_account($account,$nickname,$password){
 
-	    $data=array(
-	    	"kf_account" =>$account,
-	        "nickname" => $nickname,
-	        "password" => md5($password)
-	    );
+	    $data=array("kf_account" =>$account,"nickname" => $nickname,"password" => md5($password));
 		
 		$result = $this->http_post(self::API_BASE_URL_PREFIX.'/customservice/kfaccount/add?access_token='.$this->access_token,$data);
 		
@@ -252,15 +240,9 @@ class CustomerService extends Auth{
 	 */
 	public function update_account($account,$nickname,$password){
 
-	    $data=array(
-	            "kf_account" =>$account,
-	            "nickname" => $nickname,
-	            "password" => md5($password)
-	    );
+	    $data=array("kf_account" =>$account,"nickname" => $nickname,"password" => md5($password));
 
-	    $result = $this->http_post(self::API_BASE_URL_PREFIX.'/customservice/kfaccount/update?access_token='.$this->access_token,$data);
-	    
-	    return $result;
+	    return $this->http_post(self::API_BASE_URL_PREFIX.'/customservice/kfaccount/update?access_token='.$this->access_token,$data);
 	}
 
 	/**
@@ -276,9 +258,7 @@ class CustomerService extends Auth{
 	 */
 	public function delete_account($account){
 	    
-	    $result = $this->http_get(self::API_BASE_URL_PREFIX.'/customservice/kfaccount/del?access_token='.$this->access_token.'&kf_account='.$account);
-	    
-	    return $result;
+	    return $this->http_get(self::API_BASE_URL_PREFIX.'/customservice/kfaccount/del?access_token='.$this->access_token.'&kf_account='.$account);
 	}
 
 	/**
@@ -295,9 +275,7 @@ class CustomerService extends Auth{
 	 */
 	public function set_account_head_img($account,$imgfile){
 	    
-	    $result = $this->http_post(self::API_BASE_URL_PREFIX.'/customservice/kfaccount/uploadheadimg?access_token='.$this->access_token.'&kf_account='.$account,array('media'=>'@'.$imgfile),true);
-	    
-	    return $result;
+	    return $this->http_post(self::API_BASE_URL_PREFIX.'/customservice/kfaccount/uploadheadimg?access_token='.$this->access_token.'&kf_account='.$account,array('media'=>'@'.$imgfile),true);
 	}
 
 	/**
