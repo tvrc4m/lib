@@ -150,9 +150,15 @@ function http($method,$url,$data){
 
 	curl_setopt($ch,CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
 
+	if(stripos($url,"https://")!==FALSE){
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_SSLVERSION, 1); //CURL_SSLVERSION_TLSv1
+	}
+
 	if(strtolower($method)=='get'){
 
-		if(!empty($data)) $url.='?'.http_build_query($data);
+		!empty($data) && $url.='?'.http_build_query($data);
 	}else if(strtolower($method)=='post'){
 
 		curl_setopt($ch, CURLOPT_POST, true);

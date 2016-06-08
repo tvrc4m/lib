@@ -1,16 +1,7 @@
 <?php
-/**
- *    微信公众平台PHP-SDK, 全局返回码类
- *  @author  binsee <binsee@163.com>
- *  @link https://github.com/binsee/wechat-php-sdk
- *  @version 1.0
- *  usage:
- *      $ret=ErrCode::getErrText(40001); //错误码可以通过公众号类库的公开变量errCode得到
- *      if ($ret)
- *          echo $ret;
- *      else
- *          echo "未找到对应的内容";
- */
+
+namespace WeChat;
+
 class ErrCode
 {
     public static $errCode=array(
