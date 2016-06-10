@@ -114,7 +114,7 @@ class DBMysql extends DB{
 	 */
 	public function start_trans(){
 		if(!mysqli_begin_transaction($this->_link)){
-			throw new Exception(sprintf("启动事务失败: %s",mysqli_error($this->_link)), 10003);
+			throw new VKException(sprintf("启动事务失败: %s",mysqli_error($this->_link)), 10003);
 		}
 		return true;
 	}
@@ -125,7 +125,7 @@ class DBMysql extends DB{
 	 */
 	public function commit(){
 		if(!mysqli_commit($this->_link)){
-			throw new Exception("提交事务失败", 10004);
+			throw new VKException("提交事务失败", 10004);
 		}
 		return true;
 	}
@@ -136,7 +136,7 @@ class DBMysql extends DB{
 	 */
 	public function rollback(){
 		if(!mysqli_rollback($this->_link)){
-			throw new Exception("回滚事务失败", 10005);
+			throw new VKException("回滚事务失败", 10005);
 		}
 		return true;
 	}
@@ -162,7 +162,7 @@ class DBMysql extends DB{
 		}
 		$query=mysqli_query($this->_link,$sql);
 		if(!$query){
-			throw new Exception(var_export(array('sql'=>$sql,'error'=>mysqli_error($this->_link))), 10001);
+			throw new VKException(var_export(array('sql'=>$sql,'error'=>mysqli_error($this->_link))), 10001);
 		}
 		return $query;
 	}

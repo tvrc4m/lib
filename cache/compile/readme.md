@@ -1,1 +1,0 @@
-# smarty php compile directory

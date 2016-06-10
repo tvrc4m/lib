@@ -21,3 +21,4 @@ include_once(CORE.'medium.class.php');
 include_once(CORE.'lang.class.php');
 include_once(CORE.'plugin.class.php');
 include_once(CORE.'alias.class.php');
+include_once(CORE.'exception.class.php');

@@ -1,1 +1,0 @@
-# php session save directory

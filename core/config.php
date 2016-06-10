@@ -6,7 +6,6 @@ define('LIB', ROOT.'/library/');
 define('CORE', LIB.'core/');
 define('PLUGIN', LIB.'plugin/');
 define('EXTENSION', LIB.'extension/');
-define('CACHE', LIB.'cache/');
 
 define('SESSION', CACHE.'session');
 define('LOG', CACHE.'log/');
