@@ -26,5 +26,8 @@ define('COOKIE_DOMAIN',$_SERVER['HTTP_HOST']);
 define('COOKIE_ENCRYPT_KEY','tvrc4m@cookie');
 
 // 是否启用pjax无刷新页面请求
-define('PAJX_ENABLE', true);
+if (!defined('PAJX_ENABLE')) {
+	define('PAJX_ENABLE', true);	
+}
+
 

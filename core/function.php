@@ -58,8 +58,9 @@ function ispost(){
     return $_SERVER['REQUEST_METHOD']=='POST';
 }
 
-/*
-    source : https://github.com/defunkt/jquery-pjax
+/**
+ * source : https://github.com/defunkt/jquery-pjax
+ * @return boolean 
  */
 function ispjax(){
     return array_key_exists('HTTP_X_PJAX', $_SERVER) && $_SERVER['HTTP_X_PJAX']==='true';
