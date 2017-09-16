@@ -88,14 +88,13 @@ abstract class Model{
 */
 class MysqlModel extends Model{
 
-	protected $prefix='tt_';
+	protected $prefix='kt_';
 	
 	protected $table='';
 
 	public function __construct(){
 		parent::__construct();
 		$this->init();
-		$this->prefix=DB_PREFIX;
 	}
 	
 	protected function init(){
@@ -150,46 +149,46 @@ class MysqlModel extends Model{
 	/*
 	*	插入新数据
 	*/
-	public function insert($data){
+	protected function insert($data){
 		if(empty($data)) return 0;
 		$values=$this->set($data);
-		$this->query("INSERT INTO ".$this->prefix.$this->table." {$values}");
+		$this->query("INSERT INTO ".DB_PREFIX.$this->table." {$values}");
 		return $this->lastID();
 	}
 	/**
 	*	适合where是并集的情况下
 	*/
-	public function update($data,$where){
+	protected function update($data,$where){
 		if(empty($data)) return 0;
 		$values=$this->set($data);
 		if(empty($values)) return;
 		$where=$this->where($where);
-		return $this->query("UPDATE ".$this->prefix.$this->table." {$values} {$where}");
+		return $this->query("UPDATE ".DB_PREFIX.$this->table." {$values} {$where}");
 	}
 
-	public function select($params=array()){
+	protected function select($params=array()){
 		$field=$this->field($params['field']);
 		$where=$this->where($params['where']);
 		$sort=$this->sort($params['sort']);
 		$group=$this->group($params['group']);
 		$limit=$this->limit($params['limit']);
-		// echo "SELECT {$field} FROM ".$this->prefix.$this->table." {$where} {$group} {$sort} {$limit}";
-		return $this->find("SELECT {$field} FROM ".$this->prefix.$this->table." {$where} {$group} {$sort} {$limit}");
+		// echo "SELECT {$field} FROM ".DB_PREFIX.$this->table." {$where} {$group} {$sort} {$limit}";
+		return $this->find("SELECT {$field} FROM ".DB_PREFIX.$this->table." {$where} {$group} {$sort} {$limit}");
 	}
 
-	public function delete($where){
+	protected function delete($where){
 		$where=$this->where($where);
-		return $this->query("DELETE FROM ".$this->prefix.$this->table." {$where}");	
+		return $this->query("DELETE FROM ".DB_PREFIX.$this->table." {$where}");	
 	}
 
-	public function replace($data,$where){
+	protected function replace($data,$where){
 		if(empty($data)) return 0;
 		$values=$this->set($data);
 		$where=$this->where($where);
-		return $this->query("REPLACE INTO ".$this->prefix.$this->table." {$values} {$where}");
+		return $this->query("REPLACE INTO ".DB_PREFIX.$this->table." {$values} {$where}");
 	}
 
-	public function one($params=array()){
+	protected function one($params=array()){
 		$result=$this->select(array('where'=>$params));
 		return $result[0];
 	}
@@ -213,21 +212,6 @@ class MysqlModel extends Model{
 	public function call($proc,$params){
 
 		return $this->_db->call($proc,$params);
-	}
-
-	public function start_trans(){
-
-		return $this->_db->start_trans();
-	}
-
-	public function commit(){
-
-		return $this->_db->commit();
-	}
-
-	public function rollback(){
-
-		return $this->_db->rollback();
 	}
 
 	public function escape($value){

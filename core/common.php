@@ -17,30 +17,6 @@ function S($key,$value=''){
 	else $_SESSION[$key]=$value;
 	// print_r($_SESSION);exit;
 }
-
-function N($link=''){
-	$key='navigation';
-	if (is_null($link))  unset($_SESSION[$key]);
-	elseif($link===''){
-		$navigation_bar=unserialize($_SESSION[$key]);
-		// print_r($navigation_bar);exit;
-		if (empty($navigation_bar))
-			return '/';
-		else{
-			$current=array_pop($navigation_bar);
-			$_SESSION[$key]=serialize($navigation_bar);
-			return $current;
-		}
-	}else{
-		$navigation_bar=unserialize($_SESSION[$key]);
-		empty($navigation_bar) && $navigation_bar=array();
-		if(end($navigation_bar)==$link) return;
-		array_push($navigation_bar, $link);
-		// print_r($navigation_bar);exit;
-		$_SESSION[$key]=serialize($navigation_bar);
-	}
-}
-
 /**
 *	调用插件	
 **/
@@ -150,15 +126,9 @@ function http($method,$url,$data){
 
 	curl_setopt($ch,CURLOPT_USERAGENT,"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)");
 
-	if(stripos($url,"https://")!==FALSE){
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_SSLVERSION, 1); //CURL_SSLVERSION_TLSv1
-	}
-
 	if(strtolower($method)=='get'){
 
-		!empty($data) && $url.='?'.http_build_query($data);
+		if(!empty($data)) $url.='?'.http_build_query($data);
 	}else if(strtolower($method)=='post'){
 
 		curl_setopt($ch, CURLOPT_POST, true);
@@ -179,22 +149,5 @@ function http($method,$url,$data){
 
 function isLogged(){
 	return !!S('LOGGED');
-}
-
-function update_user_session($user){
-
-	$uid=$user['id'];
-
-	S(SESSION_USER_ID,$uid);
-
-	S(SESSION_USER,$user);
-
-	$ip=getip();
-
-	$time=time();
-
-	$logged="{$_SERVER['HTTP_HOST']};{$ip};{$uid};{$time}";
-	
-	C('LOGGED',encrypt($logged));
 }
 

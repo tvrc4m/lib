@@ -6,11 +6,7 @@ class Action extends View{
 
 	protected $error=array();
 	protected $settings=array();
-	protected $post=array();
-	protected $get=array();
-	protected $request=array();
-	protected $header=array();
-	protected $footer=array();
+	// protected $children=array('top'=>'common/top','bottom'=>'common/bottom','left'=>'common/left','right'=>'common/right');
 
 	public function __construct(){
 
@@ -25,11 +21,8 @@ class Action extends View{
 		$this->view->registerPlugin('block','top','smarty_block_top',false);
 		$this->view->registerPlugin('block','toplr','smarty_block_toplr',false);
 		// 加载setting配置
-		// $this->setting();
-		// $this->debug();
-		$this->post=&$_POST;
-		$this->get=&$_GET;
-		$this->request=&$_REQUEST;
+		$this->setting();
+		$this->debug();
 	}
 
 	protected function setting(){
@@ -87,17 +80,6 @@ class Action extends View{
 
 		return !!(S('LOGGED') && S($sk));
 	}
-	/**
-	 * 获取基础class类的组合子类
-	 * @return array 子类的相对路径+传递的参数数组
-	 */
-	protected function get_children()
-	{
-		return array(
-			'header'=>array('common/header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js,'header'=>$this->header)),
-			'footer'=>array('common/footer',array('footer'=>$this->footer)),
-		);
-	}
 
 	/**
 	*	调用Action静态方法
@@ -115,58 +97,17 @@ class Action extends View{
 
 		empty($action) && $action='index';
 
-		if(empty($cls)){
-			
-			$classname=ucfirst($parent).'Action';
-			$file=ACTION.$parent.'.action.php';
-		}else{
-			$classname=ucfirst($cls).'Action';
-			$file=ACTION.$parent.'/'.$cls.'.action.php';
-		}
-		
-		if(!is_file($file)){
-			echo $file;
-			exit('action file not found');
-		} 
+		$classname=ucfirst($cls).'Action';
+
+		$file=ACTION.$parent.'/'.$cls.'.action.php';
+		// echo $file.PHP_EOL;
+		if(!is_file($file)) exit('action file not found');
 		
 		include_once($file);
 
 		$cls=new $classname;
 
 		return call_user_func_array(array($cls,$action),array($args));
-	}
-
-	public function __get($medium){
-		
-		static $medium_instances=array();
-
-		list($dir,$name)=explode("_",strtolower($medium),2);
-
-		$name=str_replace('_', '.', $name);
-
-		if(isset($medium_instances[$medium])) return $medium_instances[$medium];
-
-		$file=MEDIUM.$dir.'/'.$name.'.php';
-
-		if (!is_file($file)) {
-			
-			return $this->$medium;
-		}
-
-		include_once $file;
-
-		if(strpos($name,'.')===FALSE){
-
-			$cls=ucfirst($dir).ucfirst($name);
-		}else{
-
-			$split=explode('.',$name);
-			$cls=ucfirst($dir).ucfirst($split[0]).ucfirst($split[1]);
-		}
-
-		$instance=new $cls();
-
-		return $medium_instances[$medium]=$instance;
 	}
 }
 
@@ -178,7 +119,7 @@ class FAction extends Action{
 		parent::__construct();
 	}
 }
-// 后台需要登录的基础action类
+
 class AdminAction extends Action{
 
 	public function __construct(){
@@ -187,13 +128,8 @@ class AdminAction extends Action{
 			redirect(admin_url('login'));
 		}
 	}
-
-	public function display($tpl,$cache_id=null,$compile_id=null,$suffix='.tpl'){
-		$this->assign(array('pTitle'=>$this->title));
-		parent::display($tpl,$cache_id,$compile_id,$suffix);
-	}
 }
-// 前台需要登录的基础action类
+
 class VAction extends Action{
 
 	protected $children=array('column_left'=>'common/left','content_top'=>'common/top','content_bottom'=>'common/bottom','column_right'=>'common/right');
@@ -203,24 +139,6 @@ class VAction extends Action{
 		if(!$this->check('VENDOR')){
 			redirect(vendor_url('login'));
 		}
-	}
-}
-
-/**
-* 只面向action只有一级目录结构的项目基础action类
-*/
-class SingleAction extends Action
-{
-	
-	function __construct(){
-		parent::__construct();
-	}
-
-	protected function get_children(){
-		return array(
-			'header'=>array('header',array('pTitle'=>$this->title,'pKeyword'=>$this->keyword,'pDesc'=>$this->description,'pCss'=>$this->css,'pJs'=>$this->js)),
-			'footer'=>'footer',
-		);
 	}
 }
 

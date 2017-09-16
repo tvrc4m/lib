@@ -14,9 +14,9 @@ function vendor_url($url='',$params=array()){
 	return sprintf("http://%s/vendor/%s%s",$_SERVER['HTTP_HOST'],$url,$query);
 }
 
-function get_url($url='',$params=array()){
+function shop_url($url='',$params=array()){
 
 	$query=empty($params)?'':'?'.http_build_query($params);
 
-	return sprintf("http://%s/%s%s",$_SERVER['HTTP_HOST'],$url,$query);
+	return sprintf("http://%s/shop/%s%s",$_SERVER['HTTP_HOST'],$url,$query);
 }

@@ -6,6 +6,7 @@ define('LIB', ROOT.'/library/');
 define('CORE', LIB.'core/');
 define('PLUGIN', LIB.'plugin/');
 define('EXTENSION', LIB.'extension/');
+define('CACHE', LIB.'cache/');
 
 define('SESSION', CACHE.'session');
 define('LOG', CACHE.'log/');
@@ -26,8 +27,5 @@ define('COOKIE_DOMAIN',$_SERVER['HTTP_HOST']);
 define('COOKIE_ENCRYPT_KEY','tvrc4m@cookie');
 
 // 是否启用pjax无刷新页面请求
-if (!defined('PAJX_ENABLE')) {
-	define('PAJX_ENABLE', true);	
-}
-
+define('PAJX_ENABLE', true);
 
